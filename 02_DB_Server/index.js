@@ -51,14 +51,14 @@ app.get('/FileList', (req, res) => {
     res.json(FileList);
 })
 
-app.put('/DataSetArr/:dataSetNum/:index/:id', (req, res) => {
-    DataSetArr[req.params.dataSetNum][index].TP = req.body.TP;
+app.put('/DataSet/:dataSetNum/:index/:id/:class', (req, res) => {
+    DataSetArr[req.params.dataSetNum][req.params.index].TP = req.params.class;
     for (let i = 0; i < DataSet.length; i++) {
         if (DataSet[i].Id == req.params.id) {
-            DataSet[i].TP = req.body.TP;
+            DataSet[i].TP = req.params.class;
         }
     }
-    res.send(true);
+    res.json({ DataSet: DataSet, DataSetArr: DataSetArr });
 })
 
 

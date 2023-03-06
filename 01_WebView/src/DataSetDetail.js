@@ -47,22 +47,28 @@ const TableBody = Styled.tbody`
 const TableRow = Styled.tr`
     display: table-row;
     vertical-align: inherit;
-    border: ${props => props.isTrue ? '2px solid blue' : '2px solid red'};
-    
+    border: ${props => {
+        if (props.tp == 1) {
+            return '2px solid blue;'
+        } else if (props.tp == 0) {
+            return '2px solid red;'
+        } else {
+            return '2px solid gray;'
+        }
+    }}
+
     &:active,
     &:hover,
     &:focus {
         background-color: ${props => {
-        if (props.isTrue == 1) {
+        if (props.tp == 1) {
             return 'rgba(0, 0, 255, 0.1);'
-        } else if (props.isTrue == 0) {
+        } else if (props.tp == 0) {
             return 'rgba(255, 0, 0, 0.1);'
         } else {
             return 'rgba(0, 0, 0, 0.1);'
         }
-    }
-    }
-    //   cursor: pointer;
+    }}
     }
 `;
 
@@ -96,76 +102,55 @@ function DataSetDetail() {
     const [width, height] = useWindowSize();
 
     function OnClickSwitchBtn(index) {
-        let tempDataSetArr = [...dataSetArr];
-        let tempDataSet = [...dataSet];
+        let tp = 0;
         if (dataSetArr[dataSetId][index].TP > 1) {
             alert('먼저 데이터를 추가하세요');
             return;
         } else if (dataSetArr[dataSetId][index].TP == 1) {
-            tempDataSetArr[dataSetId][index].TP = 0;
-            for (let i = 0; i < dataSet.length; i++) {
-                if (dataSet[i].Id == dataSetArr[dataSetId][index].Id) {
-                    tempDataSet[i].TP = 0;
-                    break;
-                }
-            }
+            tp = 0;
         } else if (dataSetArr[dataSetId][index].TP == 0) {
-            tempDataSetArr[dataSetId][index].TP = 1;
-            for (let i = 0; i < dataSet.length; i++) {
-                if (dataSet[i].Id == dataSetArr[dataSetId][index].Id) {
-                    tempDataSet[i].TP = 1;
-                    break;
-                }
-            }
+            tp = 1;
         }
 
-        SetDataSetArr(tempDataSetArr);
-        SetDataSet(tempDataSet);
+        fetch(DbAddr + `DataSet/${dataSetId}/${index}/${dataSetArr[dataSetId][index].Id}/${tp}`, {
+            method: `PUT`,
+            headers: { 'Content-Type': 'application/json' }
+        }).then((res) => res.json()).then(res => { SetDataSet(res.DataSet); SetDataSetArr(res.DataSetArr); })
     }
 
     function OnClickTrashBtn(index) {
-        let tempDataSetArr = [...dataSetArr];
-        let tempDataSet = [...dataSet];
+        let tp = 0;
         if (dataSetArr[dataSetId][index].TP > 1) {
             alert('이미 사용하지 않는 데이터입니다.');
             return;
         } else {
-            tempDataSetArr[dataSetId][index].TP = 2;
-            for (let i = 0; i < dataSet.length; i++) {
-                if (dataSet[i].Id == dataSetArr[dataSetId][index].Id) {
-                    tempDataSet[i].TP = 2;
-                    break;
-                }
-            }
+            tp = 2;
         }
 
-        SetDataSetArr(tempDataSetArr);
-        SetDataSet(tempDataSet);
+        fetch(DbAddr + `DataSet/${dataSetId}/${index}/${dataSetArr[dataSetId][index].Id}/${tp}`, {
+            method: `PUT`,
+            headers: { 'Content-Type': 'application/json' }
+        }).then((res) => res.json()).then(res => { SetDataSet(res.DataSet); SetDataSetArr(res.DataSetArr); })
     }
 
     function OnClickAddBtn(index) {
-        let tempDataSetArr = [...dataSetArr];
-        let tempDataSet = [...dataSet];
+        let tp = 2;
         if (dataSetArr[dataSetId][index].TP <= 1) {
             alert('이미 추가된 데이터입니다.');
             return;
         } else {
-            tempDataSetArr[dataSetId][index].TP = 0;
-            for (let i = 0; i < dataSet.length; i++) {
-                if (dataSet[i].Id == dataSetArr[dataSetId][index].Id) {
-                    tempDataSet[i].TP = 0;
-                    break;
-                }
-            }
+            tp = 0;
         }
 
-        SetDataSetArr(tempDataSetArr);
-        SetDataSet(tempDataSet);
+        fetch(DbAddr + `DataSet/${dataSetId}/${index}/${dataSetArr[dataSetId][index].Id}/${tp}`, {
+            method: `PUT`,
+            headers: { 'Content-Type': 'application/json' }
+        }).then((res) => res.json()).then(res => { SetDataSet(res.DataSet); SetDataSetArr(res.DataSetArr); })
     }
 
     function Content({ data, index, fileName }) {
         return (
-            <TableRow key={index} isTrue={data.TP} >
+            <TableRow key={index} tp={data.TP} >
                 <TableData>
                     <HiSwitchHorizontal style={{ cursor: 'pointer' }} onClick={() => OnClickSwitchBtn(index)} />
                     {(data.TP <= 1) && <GoTrashcan style={{ cursor: 'pointer' }} onClick={() => OnClickTrashBtn(index)} />}
