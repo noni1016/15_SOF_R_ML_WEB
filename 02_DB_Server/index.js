@@ -54,11 +54,17 @@ app.get('/FileList', (req, res) => {
 app.put('/DataSet/:dataSetNum/:index/:id/:class', (req, res) => {
     DataSetArr[req.params.dataSetNum][req.params.index].TP = req.params.class;
     for (let i = 0; i < DataSet.length; i++) {
-        if (DataSet[i].Id == req.params.id) {
+        if (DataSet[i].Id == req.params.id && DataSet[i].LogInfo.LogFileName == DataSetArr[req.params.dataSetNum][req.params.index].LogInfo.LogFileName && DataSet[i].LogInfo.Frame == DataSetArr[req.params.dataSetNum][req.params.index].LogInfo.Frame) {
             DataSet[i].TP = req.params.class;
         }
     }
+    fs.writeFileSync(DatabasePath + 'DataSet.json', JSON.stringify(DataSet));
+    fs.writeFileSync(DatabasePath + `${FileList[req.params.dataSetNum]}` + '/DataSet.json', JSON.stringify(DataSetArr[req.params.dataSetNum]));
+
+    console.log('Json File Updated')
+
     res.json({ DataSet: DataSet, DataSetArr: DataSetArr });
+
 })
 
 

@@ -3,6 +3,10 @@ import Styled from 'styled-components';
 import ContentTable from './Table';
 import { useNavigate } from "react-router-dom";
 
+const Container = Styled.div`
+    margin: 50px;
+`;
+
 const Title = Styled.div`
   font-size: 30px;
   font-weight: bold;
@@ -63,6 +67,7 @@ function Home() {
                 }
             }
         }
+
         SetNumOfTrueDataArr(numTrueArr);
         SetNumOfFalseDataArr(numFalseArr);
         SetNumOfUnusedDataArr(numUnusedArr);
@@ -79,7 +84,7 @@ function Home() {
     }, [numOfUnusedDataArr])
 
     return (
-        <>
+        <Container>
             <Title onClick={() => navigate(`DataSet`)}>SOF_R ML DataSet</Title>
             전체 데이터 개수 : {dataSet.length}
             <br />
@@ -92,7 +97,7 @@ function Home() {
             <br />
             {dataSetArr.length} 개 프레임에서 데이터 취득
             <ContentTable header={summaryHeader} contents={summaryValue} />
-        </>
+        </Container>
     )
 
 }

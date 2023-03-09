@@ -6,6 +6,10 @@ import { GoTrashcan } from 'react-icons/go'
 import { HiSwitchHorizontal } from 'react-icons/hi'
 import { IoMdAddCircle } from 'react-icons/io'
 
+const Container = Styled.div`
+    margin: 50px;
+`;
+
 const Title = Styled.div`
   font-size: 30px;
   font-weight: bold;
@@ -74,16 +78,16 @@ const TableRow = Styled.tr`
 
 const TableData = Styled.td`
 padding: 20px 20px;
-line - height: 18px;
+line-height: 18px;
 color: black;
-display: table - cell;
-vertical - align: inherit;
-text - align: center;
+display: table-cell;
+vertical-align: inherit;
+text-align: center;
 border: 1px solid grey;
 `;
 
 const TableImg = Styled.img`
-width: 70 %;
+width: 100%;
 `;
 
 var DbAddr = 'http://localhost:8000/';
@@ -158,6 +162,7 @@ function DataSetDetail() {
                 </TableData>
                 <TableData>{data.Id}</TableData>
                 <TableData><TableImg src={DbAddr + `Resource/${fileName}/${data.Id}.png`} /></TableData >
+                <TableData><TableImg src={DbAddr + `Resource/${fileName}/${data.Id}.png`} /></TableData >
             </TableRow >
         )
     }
@@ -180,7 +185,7 @@ function DataSetDetail() {
     }, [fileList])
 
     return (
-        <div>
+        <Container>
             <Title>{title}</Title>
 
             <TopImageBox>
@@ -201,10 +206,9 @@ function DataSetDetail() {
                 <TableBody>
                     {dataSetArr[dataSetId] && dataSetArr[dataSetId].map((v, i) => (<Content data={v} index={i} fileName={fileList[dataSetId]} />))}
                 </TableBody>
-
             </Table>
 
-        </div>
+        </Container>
     )
 };
 
