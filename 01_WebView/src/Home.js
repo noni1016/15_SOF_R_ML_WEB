@@ -4,12 +4,35 @@ import ContentTable from './Table';
 import { useNavigate } from "react-router-dom";
 
 const Container = Styled.div`
+    position: relative;
     margin: 50px;
 `;
 
 const Title = Styled.div`
   font-size: 30px;
   font-weight: bold;
+`;
+
+const ShowResultBtn = Styled.div`
+    position: absolute;
+    height: 30px;
+    top: 0px;
+    right: 0px;
+    border: 2px solid blue;
+    font-weight: bolder;
+    text-align: center;
+    vertical-align: middle;
+    line-height: normal;
+    padding: 5px 5px 0px 5px;
+    background-color: blue;
+    color: white;
+    
+    &:active,
+    &:hover,
+    &:focus {
+        background-color: white;
+        color: blue;
+    }
 `;
 
 var DbAddr = 'http://localhost:8000/';
@@ -97,6 +120,7 @@ function Home() {
             <br />
             {dataSetArr.length} 개 프레임에서 데이터 취득
             <ContentTable header={summaryHeader} contents={summaryValue} />
+            <ShowResultBtn onClick={() => navigate(`TestResult`)}>ML Test 결과 보기</ShowResultBtn>
         </Container>
     )
 

@@ -14,51 +14,71 @@ app.listen(port, () => {
 const fs = require('fs');
 var FileList = [];
 var DataSetArr = [];
-fs.readdir(DatabasePath, function (err, filelist) {
-    console.log(filelist);
-
-    filelist.map((v, i) => {
-        if (v.search('.json') < 0) {
-            FileList.push(v);
-            let dataBuffer = fs.readFileSync(DatabasePath + v + '/DataSet.json');
-            let dataJSON = dataBuffer.toString();
-            DataSetArr.push(JSON.parse(dataJSON));
-        }
-    })
-    console.log(FileList);
-})
-
-const dataBuffer = fs.readFileSync(DatabasePath + 'DataSet.json');
-const dataJSON = dataBuffer.toString()
-const DataSet = JSON.parse(dataJSON);
-
-
+var DataSet;
+var TestDataSet;
 
 app.get('/', (req, res) => {
     res.send('Hello World');
 })
 
 app.get('/DataSet', function (req, res) {
-    res.json(DataSet);
+    // dataBuffer = fs.readFileSync(DatabasePath + 'DataSet.json');
+    // dataJSON = dataBuffer.toString()
+    // DataSet = JSON.parse(dataJSON);
+    DataSet = [];
+    fs.readdir(DatabasePath, function (err, filelist) {
+        filelist.map((v, i) => {
+            if (v.search('.json') < 0) {
+                let dataBuffer = fs.readFileSync(DatabasePath + v + '/DataSet.json');
+                let dataJSON = dataBuffer.toString();
+                dataObj = JSON.parse(dataJSON);
+                dataObj.map((x, j) => {
+                    DataSet.push(x);
+                })
+
+            }
+        })
+        res.json(DataSet);
+    })
+
+    // res.json(DataSet);
 })
 
 app.get('/DataSetArr', (req, res) => {
-    console.log(DataSetArr.length);
-    res.json(DataSetArr);
+    DataSetArr = [];
+    fs.readdir(DatabasePath, function (err, filelist) {
+        filelist.map((v, i) => {
+            if (v.search('.json') < 0) {
+                let dataBuffer = fs.readFileSync(DatabasePath + v + '/DataSet.json');
+                let dataJSON = dataBuffer.toString();
+                DataSetArr.push(JSON.parse(dataJSON));
+            }
+        })
+        res.json(DataSetArr);
+    })
 })
 
 app.get('/FileList', (req, res) => {
-    res.json(FileList);
+    FileList = [];
+    fs.readdir(DatabasePath, function (err, filelist) {    
+        filelist.map((v, i) => {
+            if (v.search('.json') < 0) {
+                FileList.push(v);
+            }
+        })
+        console.log(FileList);
+        res.json(FileList);
+    })
 })
 
 app.put('/DataSet/:dataSetNum/:index/:id/:class', (req, res) => {
-    DataSetArr[req.params.dataSetNum][req.params.index].TP = req.params.class;
-    for (let i = 0; i < DataSet.length; i++) {
-        if (DataSet[i].Id == req.params.id && DataSet[i].LogInfo.LogFileName == DataSetArr[req.params.dataSetNum][req.params.index].LogInfo.LogFileName && DataSet[i].LogInfo.Frame == DataSetArr[req.params.dataSetNum][req.params.index].LogInfo.Frame) {
-            DataSet[i].TP = req.params.class;
-        }
-    }
-    fs.writeFileSync(DatabasePath + 'DataSet.json', JSON.stringify(DataSet));
+    DataSetArr[req.params.dataSetNum][req.params.index].TP = Number(req.params.class);
+    // for (let i = 0; i < DataSet.length; i++) {
+    //     if (DataSet[i].Id == req.params.id && DataSet[i].LogInfo.LogFileName == DataSetArr[req.params.dataSetNum][req.params.index].LogInfo.LogFileName && DataSet[i].LogInfo.Frame == DataSetArr[req.params.dataSetNum][req.params.index].LogInfo.Frame) {
+    //         DataSet[i].TP = Number(req.params.class);
+    //     }
+    // }
+    // fs.writeFileSync(DatabasePath + 'DataSet.json', JSON.stringify(DataSet));
     fs.writeFileSync(DatabasePath + `${FileList[req.params.dataSetNum]}` + '/DataSet.json', JSON.stringify(DataSetArr[req.params.dataSetNum]));
 
     console.log('Json File Updated')
@@ -67,4 +87,13 @@ app.put('/DataSet/:dataSetNum/:index/:id/:class', (req, res) => {
 
 })
 
+app.get('/TestDataSet', function (req, res) {
+    // dataBuffer = fs.readFileSync(DatabasePath + 'DataSet.json');
+    // dataJSON = dataBuffer.toString()
+    // DataSet = JSON.parse(dataJSON);
+    dataBuffer = fs.readFileSync(DatabasePath + 'TestDataSet.json');
+    dataJSON = dataBuffer.toString();
+    TestDataSet = JSON.parse(dataJSON);
 
+    res.json(TestDataSet);
+})

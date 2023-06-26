@@ -155,14 +155,18 @@ function DataSetDetail() {
     function Content({ data, index, fileName }) {
         return (
             <TableRow key={index} tp={data.TP} >
-                <TableData>
-                    <HiSwitchHorizontal style={{ cursor: 'pointer' }} onClick={() => OnClickSwitchBtn(index)} />
-                    {(data.TP <= 1) && <GoTrashcan style={{ cursor: 'pointer' }} onClick={() => OnClickTrashBtn(index)} />}
-                    {(data.TP > 1) && <IoMdAddCircle style={{ cursor: 'pointer' }} onClick={() => OnClickAddBtn(index)} />}
-                </TableData>
                 <TableData>{data.Id}</TableData>
                 <TableData><TableImg src={DbAddr + `Resource/${fileName}/${data.Id}.png`} /></TableData >
-                <TableData><TableImg src={DbAddr + `Resource/${fileName}/${data.Id}.png`} /></TableData >
+                <TableData><TableImg src={DbAddr + `Resource/${fileName}/${data.Id}_Pos.png`} /></TableData >
+                {/* <TableData>{data.Feature.AvgMotionScore}</TableData>
+                <TableData>{data.Feature.NumOfHighScorePntInBox}</TableData> */}
+                <TableData>
+                    <HiSwitchHorizontal style={{ cursor: 'pointer' }} size="50" onClick={() => OnClickSwitchBtn(index)} />
+                    <br/>
+                    <br/>
+                    {(data.TP <= 1) && <GoTrashcan style={{ cursor: 'pointer' }} size="20" onClick={() => OnClickTrashBtn(index)} />}
+                    {(data.TP > 1) && <IoMdAddCircle style={{ cursor: 'pointer' }} size="20" onClick={() => OnClickAddBtn(index)} />}
+                </TableData>
             </TableRow >
         )
     }
@@ -202,6 +206,8 @@ function DataSetDetail() {
                     <th>Handle</th>
                     <th>ID</th>
                     <th>Contour</th>
+                    {/* <th>static score</th>
+                    <th>NumOfHighScorePntInBox</th> */}
                 </TableHead>
                 <TableBody>
                     {dataSetArr[dataSetId] && dataSetArr[dataSetId].map((v, i) => (<Content data={v} index={i} fileName={fileList[dataSetId]} />))}
